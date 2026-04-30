@@ -8,7 +8,7 @@ from modules.pdf import gerar_pdf_e_relatorio
 if __name__ == "__main__":
     subprocess.run(["rm", "-rf", "cache"])
     
-    pasta_leitor = './Leitor_NFs'
+    pasta_leitor = './Leitor_CT-Es'
     arquivo_final = 'arquivo_unificado.pdf'
     relatorio = 'relatorio.xlsx'
     

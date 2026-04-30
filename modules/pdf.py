@@ -15,9 +15,7 @@ PAGE_MAX_X = 595
 PAGE_MAX_Y = 841
 
 LABELSIZE_X = 217
-LABELSIZE_Y = 78
-
-prazoVencimento = 11
+LABELSIZE_Y = 64
 
 
 def whitespaceFinder(page: Page) -> tuple[int, int, int, int] | None:
@@ -67,11 +65,6 @@ def gerar_labelPdf(x:int, y:int, signer:str, processo:str, emissao:str, final_cn
     if not signer.upper() in ['M', 'G', 'K']:
         labelWidth = 115
     
-    if emissao != "NA":  
-        emissaoDate = date.strptime(emissao, '%d/%m/%Y')
-    else:
-        emissaoDate = "NA"
-    
     x, y = transposeOrigin_bottom(x, y)
     
     c = canvas.Canvas(output_path, pagesize=A4)
@@ -92,11 +85,6 @@ def gerar_labelPdf(x:int, y:int, signer:str, processo:str, emissao:str, final_cn
 
         c.drawString(lateral + 5, cord_altura - 10, txt)
     
-    data_vencimento = "__/__/____"
-    
-    if emissaoDate != "NA":
-        vencimento = emissaoDate + timedelta(days=prazoVencimento)
-        data_vencimento = vencimento.strftime('%d/%m/%Y')
     
     ic = "_____"
     if final_cnpj != "NA":
@@ -125,20 +113,19 @@ def gerar_labelPdf(x:int, y:int, signer:str, processo:str, emissao:str, final_cn
     cria_linha(x, y, 'Ct. Contábil: 3310102099', 4)
     cria_linha(x, y, f'IC: {ic}', 5)
     cria_linha(x, y, f'Cód.: {codServ}', 6)
-    cria_linha(x, y, f'Pagamento após: {data_vencimento}', 7)
     
 
     if signer.upper() == 'G':
-        cria_linha(x+110, y, 'Gustavo Carvalho Daquano', 6)
-        cria_linha(x+110, y, '       Export Supervisor', 7)
+        cria_linha(x+110, y, 'Gustavo Carvalho Daquano', 5)
+        cria_linha(x+110, y, '       Export Supervisor', 6)
 
     elif signer.upper() == 'M':
-        cria_linha(x+110, y, 'Michelle Corrêa Lisboa', 6)
-        cria_linha(x+110, y, '      Export Manager', 7)
+        cria_linha(x+110, y, 'Michelle Corrêa Lisboa', 5)
+        cria_linha(x+110, y, '      Export Manager', 6)
         
     elif signer.upper() == 'K':
-        cria_linha(x+110, y, 'Kendi Leal Okumura', 6)
-        cria_linha(x+110, y, '    Export Manager', 7)
+        cria_linha(x+110, y, 'Kendi Leal Okumura', 5)
+        cria_linha(x+110, y, '    Export Manager', 6)
     
     
     c.save()
@@ -163,15 +150,15 @@ def gerar_labelledPdf(file_path:str, assinante:str, pasta_etiquetas:str, pasta_n
             listaDadosCTEs.append(dadosCTE)
             
             if dadosCTE.processo == "NA":
-                print(f'{filename}: página "{pageIndex+1}" faltando processo')
+                print(f'\n{filename}: página "{pageIndex+1}" faltando processo')
                 dadosCTE.processo = input(f'Insira o processo (sempre com "-" e sem "/"): ')
             
             if dadosCTE.filialTomador == "NA":
-                print(f'{filename}: página "{pageIndex+1}" faltando CNPJ GTF')
+                print(f'\n{filename}: página "{pageIndex+1}" faltando CNPJ GTF')
                 dadosCTE.filialTomador = input(f'Insira o final do CNPJ (Após a "/") do arquivo "{filename}" na página "{pageIndex+1}": ')
             
             if dadosCTE.emissao == "NA":
-                print(f'{filename}: página "{pageIndex+1}" faltando data emissão')
+                print(f'\n{filename}: página "{pageIndex+1}" faltando data emissão')
                 dadosCTE.filialTomador = input(f'Insira a data de emissão (formato: dd/mm/aaaa): ')
             
             
