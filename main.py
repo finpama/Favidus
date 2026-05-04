@@ -29,5 +29,6 @@ if __name__ == "__main__":
     try:
         df.drop('isCartaCorrecao', axis=1, inplace=True)
         df.to_excel(relatorio, index=False)
+        print('O Relatório das CT-Es foi salvo com sucesso no arquivo "relatorio.xlsx"')
     except PermissionError:
         raise PermissionError('Não foi possível alterar o relatório já existente pois o arquivo está aberto')

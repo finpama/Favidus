@@ -9,6 +9,7 @@ import pandas as pd
 
 from modules.buscador import coletarDadosCTE, DadosCTE
 from modules.utils import unir_pdfs
+from modules.utils import define_vazia
 
 
 PAGE_MAX_X = 595
@@ -168,7 +169,7 @@ def gerar_labelledPdf(file_path:str, assinante:str, pasta_etiquetas:str, pasta_n
             if whitespaceCoordinates != None:
                 x, y, x2, y2 = whitespaceCoordinates
                 
-                path_labelfile = f"{pasta_etiquetas}/Etiqueta ({filename[:-4]}) pag{pageIndex+1}.pdf"
+                path_labelfile = f"{pasta_etiquetas}/Etiqueta ({filename[:-4]}--CTE_{dadosCTE.cte}--{assinante}--{dadosCTE.processo}--pag{pageIndex+1}).pdf"
                 
                 if not os.path.exists(path_labelfile):
                     gerar_labelPdf(x, y, assinante, dadosCTE.processo, dadosCTE.emissao, dadosCTE.filialTomador, dadosCTE.codServ, path_labelfile)
@@ -192,8 +193,10 @@ def gerar_pdf_e_relatorio(pdf_paths, assinante, arquivo_final):
     pasta_nfs = f'{cacheDir}/pdfs_etiquetados'
     
     os.mkdir(cacheDir)
-    os.mkdir(f'{cacheDir}/etiquetas')
-    os.mkdir(f'{cacheDir}/pdfs_etiquetados')
+    
+    
+    define_vazia(f'{cacheDir}/etiquetas')
+    define_vazia(f'{cacheDir}/pdfs_etiquetados')
     
     dadosDF = []
     

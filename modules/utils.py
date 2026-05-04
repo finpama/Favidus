@@ -32,3 +32,16 @@ def unir_pdfs(directory_path, output_filename):
     
     print(f"\nTodos os {len(files)} CT-Es foram mesclados e estão no arquivo {output_filename}")
 
+
+def limparPastaExixtente(folder:str):
+    files = os.listdir(folder)
+
+    for file in files:
+        file_path = os.path.join(folder, file)
+        os.remove(file_path)
+
+def define_vazia(folder):
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+    else:
+        limparPastaExixtente(folder)
