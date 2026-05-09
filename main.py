@@ -26,4 +26,11 @@ files = os.listdir(pasta_leitor)
 pdfs = [file for file in files if file.upper().endswith('.PDF')]
 pdf_paths = [os.path.join(pasta_leitor, pdf) for pdf in pdfs]
 
-gerar_pdf_e_relatorio(pdf_paths, assinante, arquivo_final)
+df = gerar_pdf_e_relatorio(pdf_paths, assinante, arquivo_final)
+    
+try:
+    df.drop('isCartaCorrecao', axis=1, inplace=True)
+    df.to_excel(relatorio, index=False)
+    print('O Relatório das CT-Es foi salvo com sucesso no arquivo "relatorio.xlsx"')
+except PermissionError:
+    raise PermissionError('Não foi possível alterar o relatório já existente pois o arquivo está aberto')
