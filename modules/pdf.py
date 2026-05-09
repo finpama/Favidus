@@ -6,10 +6,13 @@ from pdfplumber.page import Page
 import os
 from PyPDF2 import PdfReader, PdfWriter
 import pandas as pd
+import colorama
 
 from modules.buscador import coletarDadosCTE, DadosCTE
 from modules.utils import unir_pdfs
 from modules.utils import define_vazia
+
+from time import sleep
 
 
 PAGE_MAX_X = 595
@@ -192,8 +195,6 @@ def gerar_pdf_e_relatorio(pdf_paths, assinante, arquivo_final):
     pasta_etiquetas = f'{cacheDir}/etiquetas'
     pasta_nfs = f'{cacheDir}/pdfs_etiquetados'
     
-    os.mkdir(cacheDir)
-    
     
     define_vazia(f'{cacheDir}/etiquetas')
     define_vazia(f'{cacheDir}/pdfs_etiquetados')
@@ -206,7 +207,17 @@ def gerar_pdf_e_relatorio(pdf_paths, assinante, arquivo_final):
         if dadosCTEs != []:
             for dado in dadosCTEs: dadosDF.append(dado) 
     
-    unir_pdfs(pasta_nfs, arquivo_final)
+    try:
+        unir_pdfs(pasta_nfs, arquivo_final)
+    except ValueError:
+        for i in range(20):
+            if i % 2 == 0:
+                print(('\033[1m\033[31m' + 'Sem CT-Es na pasta leitor...' + '\033[0m'))
+            else:
+                print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+                
+            sleep(.35)
+        raise ValueError('\033[1m\033[31m' + 'Sem CT-Es na pasta leitor...' + '\033[0m')
     
     return pd.DataFrame(dadosDF)
 
